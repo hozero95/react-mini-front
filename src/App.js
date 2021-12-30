@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import routes from './routes'
+import NavList from "./components/NavList";
+import {Container} from "react-bootstrap";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    return (
+        <Container fluid style={{padding: '0'}}>
+            <BrowserRouter>
+                <NavList/>
+                <Switch>
+                    {routes.map(route => {
+                        return (
+                            <Route
+                                key={route.path}
+                                path={route.path}
+                                exact
+                            >
+                                <route.component/>
+                            </Route>
+                        );
+                    })};
+                </Switch>
+            </BrowserRouter>
+        </Container>
+    );
+};
 
 export default App;
