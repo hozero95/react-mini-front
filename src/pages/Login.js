@@ -47,16 +47,30 @@ const Login = () => {
         event.preventDefault(); // 테스트용
 
         if (validateForm()) {
-            axios.get('')
-                .then(response => {
-                    console.log(response);
+            axios.post('http://localhost:8000/api/auth/signin', {
+                "userId": loginId,
+                "userPassword": loginPassword
+            }).then(response => {
+                console.log(response);
 
-                    // 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동
-                    resetErrors();
-                    resetForm();
-                    // eslint-disable-next-line no-restricted-globals
-                    location.href = '/';
+                const headers = {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + response.data.token
+                };
+
+                axios.defaults.headers.post = null;
+                axios.get('http://localhost:8000/api/auth/user', {
+                    headers
+                }).then(response2 => {
+                    console.log(response2);
                 });
+
+                // 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동
+                // resetErrors();
+                // resetForm();
+                // eslint-disable-next-line no-restricted-globals
+                // location.href = '/';
+            });
         }
     };
 
