@@ -1,11 +1,17 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Card, Container, Form, Row} from "react-bootstrap";
+import axios from "axios";
 
 const Login = () => {
     const [loginId, setLoginId] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [idError, setIdError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+
+    // Login 페이지가 렌더링 될 때 로그인 상태 검사
+    useEffect(() => {
+
+    }, []);
 
     // 폼 리셋
     const resetForm = () => {
@@ -41,12 +47,16 @@ const Login = () => {
         event.preventDefault(); // 테스트용
 
         if (validateForm()) {
-            // axios 로직 추가
+            axios.get('')
+                .then(response => {
+                    console.log(response);
 
-            resetErrors();
-            resetForm();
-            // eslint-disable-next-line no-restricted-globals
-            location.href = '/';
+                    // 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동
+                    resetErrors();
+                    resetForm();
+                    // eslint-disable-next-line no-restricted-globals
+                    location.href = '/';
+                });
         }
     };
 
