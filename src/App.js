@@ -1,14 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import routes from './routes'
 import NavList from "./components/NavList";
 import {Container} from "react-bootstrap";
 
 const App = () => {
+    const [isLogin, setIsLogin] = useState(false);
+
     return (
         <Container fluid style={{padding: '0'}}>
             <BrowserRouter>
-                <NavList/>
+                <NavList isLogin={isLogin} setIsLogin={setIsLogin}/>
                 <Switch>
                     {routes.map(route => {
                         return (
@@ -17,7 +19,7 @@ const App = () => {
                                 path={route.path}
                                 exact
                             >
-                                <route.component/>
+                                <route.component isLogin={isLogin} setIsLogin={setIsLogin}/>
                             </Route>
                         );
                     })};

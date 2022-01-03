@@ -2,14 +2,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-// Importing the Bootstrap CSS
+import {applyMiddleware, createStore} from "redux";
+import {Provider} from "react-redux";
+import rootReducer from "./modules";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import logger from 'redux-logger';
+import {composeWithDevTools} from "redux-devtools-extension";
+import ReduxThunk from 'redux-thunk';
+
+/* 스토어 생성 */
+const store = createStore(
+    rootReducer,
+    // logger를 사용하는 경우, logger가 가장 마지막에 와야한다.
+    composeWithDevTools(applyMiddleware(ReduxThunk, logger))
+); // 여러 개의 미들웨어 적용 가능
 
 ReactDOM.render(
-    <React.StrictMode>
+    <Provider store={store}>
         <App/>
-    </React.StrictMode>,
+    </Provider>,
     document.getElementById('root')
 );
 

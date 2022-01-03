@@ -1,8 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Container, Form, Row} from "react-bootstrap";
 import axios from "axios";
+import {setToken, setUserInfo} from '../modules/token';
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
 
-const Login = () => {
+const Login = ({setIsLogin}) => {
+    const token = useSelector(state => state.token.token, shallowEqual);
+
+    const dispatch = useDispatch();
+    const onSetToken = token => dispatch(setToken(token));
+    const onSetUserInfo = userInfo => dispatch(setUserInfo(userInfo));
+
+    const history = useHistory();
+
     const [loginId, setLoginId] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [idError, setIdError] = useState('');
@@ -10,8 +21,11 @@ const Login = () => {
 
     // Login 페이지가 렌더링 될 때 로그인 상태 검사
     useEffect(() => {
-
-    }, []);
+        if (localStorage.getItem("token") !== null) {
+            alert("이미 로그인중입니다.");
+            history.push("/");
+        }
+    }, [history]);
 
     // 폼 리셋
     const resetForm = () => {
@@ -50,26 +64,31 @@ const Login = () => {
             axios.post('http://localhost:8000/api/auth/signin', {
                 "userId": loginId,
                 "userPassword": loginPassword
-            }).then(response => {
-                console.log(response);
-
+            }).then(res1 => {
                 const headers = {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + response.data.token
+                    "Authorization": "Bearer " + res1.data.token
                 };
 
                 axios.defaults.headers.post = null;
                 axios.get('http://localhost:8000/api/auth/user', {
                     headers
-                }).then(response2 => {
-                    console.log(response2);
-                });
+                }).then(res2 => {
+                    // redux store 사용
+                    onSetToken(res1.data.token);
+                    onSetUserInfo(res2.data);
 
-                // 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동
-                // resetErrors();
-                // resetForm();
-                // eslint-disable-next-line no-restricted-globals
-                // location.href = '/';
+                    // localStorage 사용
+                    localStorage.setItem("token", JSON.stringify(res1.data));
+                    localStorage.setItem("userInfo", JSON.stringify(res2.data));
+
+                    // 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동
+                    alert(JSON.parse(localStorage.getItem("userInfo")).userId + "님 환영합니다.");
+                    resetErrors();
+                    resetForm();
+                    setIsLogin(true);
+                    history.push("/");
+                });
             });
         }
     };
