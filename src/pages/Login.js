@@ -107,18 +107,24 @@ const Login = () => {
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>ID</Form.Label>
                                 <Form.Control type="text" placeholder="Enter ID" value={loginId}
-                                              onChange={e => setLoginId(e.target.value)}/>
+                                              onChange={e => {
+                                                  setLoginId(e.target.value);
+                                                  setIdError('');
+                                              }}/>
                                 <div style={{color: 'red'}}>{idError}</div>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control type="password" placeholder="Enter Password" value={loginPassword}
-                                              onChange={e => setLoginPassword(e.target.value)}/>
+                                              onChange={e => {
+                                                  setLoginPassword(e.target.value);
+                                                  setPasswordError('');
+                                              }}/>
                                 <div style={{color: 'red'}}>{passwordError}</div>
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Remember me"/>
-                            </Form.Group>
+                            {/*<Form.Group className="mb-3" controlId="formBasicCheckbox">*/}
+                            {/*    <Form.Check type="checkbox" label="Remember me"/>*/}
+                            {/*</Form.Group>*/}
                             <Button variant="primary" type="submit" lg="3">
                                 Login
                             </Button>

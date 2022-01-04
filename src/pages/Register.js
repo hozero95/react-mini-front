@@ -11,8 +11,10 @@ const Register = () => {
 
     const [registId, setRegistId] = useState('');
     const [registPassword, setRegistPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
     const [idError, setIdError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [repeatPasswordError, setRepeatPasswordError] = useState('');
 
     /* Register 페이지가 렌더링 될 때 로그인 상태 검사 */
     useEffect(() => {
@@ -27,12 +29,14 @@ const Register = () => {
     const resetForm = () => {
         setRegistId('');
         setRegistPassword('');
+        setRepeatPassword('');
     }
 
     /* 에러 리셋 */
     const resetErrors = () => {
         setIdError('');
         setPasswordError('');
+        setRepeatPasswordError('');
     };
 
     /* 회원가입 유효성 검사 */
@@ -48,13 +52,28 @@ const Register = () => {
             setPasswordError('비밀번호를 입력해주세요.');
             validated = false;
         }
+        if (!repeatPassword) {
+            setRepeatPasswordError('비밀번호를 확인해주세요.');
+            validated = false;
+        }
 
         return validated;
     };
 
+    /* 비밀번호 체크 */
+    const checkPassword = (e) => {
+        setRepeatPassword(e.target.value);
+
+        if (registPassword !== e.target.value) {
+            setRepeatPasswordError('비밀번호가 일치하지 않습니다.');
+        } else {
+            setRepeatPasswordError('');
+        }
+    }
+
     /* 회원가입 API logic */
-    const registSubmit = (event) => {
-        event.preventDefault();
+    const registSubmit = (e) => {
+        e.preventDefault();
 
         if (validateForm()) {
             axios.post('http://localhost:8000/api/auth/signup', {
@@ -79,17 +98,29 @@ const Register = () => {
                     <Card.Header>Register</Card.Header>
                     <Card.Body>
                         <Form onSubmit={registSubmit}>
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Group className="mb-3" controlId="formBasicID">
                                 <Form.Label>ID</Form.Label>
                                 <Form.Control type="text" placeholder="Enter ID" value={registId}
-                                              onChange={e => setRegistId(e.target.value)}/>
+                                              onChange={e => {
+                                                  setRegistId(e.target.value);
+                                                  setIdError('');
+                                              }}/>
                                 <div style={{color: 'red'}}>{idError}</div>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control type="password" placeholder="Enter Password" value={registPassword}
-                                              onChange={e => setRegistPassword(e.target.value)}/>
+                                              onChange={e => {
+                                                  setRegistPassword(e.target.value);
+                                                  setPasswordError('');
+                                              }}/>
                                 <div style={{color: 'red'}}>{passwordError}</div>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicRepeatPassword">
+                                <Form.Label>Repeat Password</Form.Label>
+                                <Form.Control type="password" placeholder="Enter Repeat Password" value={repeatPassword}
+                                              onChange={e => checkPassword(e)}/>
+                                <div style={{color: 'red'}}>{repeatPasswordError}</div>
                             </Form.Group>
                             <Button variant="primary" type="submit" lg="3">
                                 Regist
