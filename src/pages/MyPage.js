@@ -10,7 +10,6 @@ const MyPage = () => {
 
     /* myPage가 렌더링 될 때 로그인 여부 검사 */
     useEffect(() => {
-        // if (localStorage.getItem("token") === null) {
         if (token === null || token === '') {
             alert("로그인이 필요합니다.");
             history.push("/login");

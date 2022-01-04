@@ -19,11 +19,6 @@ const NavList = () => {
 
     /* 토큰 상태가 변하면 로근 여부 상태를 갱신 */
     useEffect(() => {
-        // if (localStorage.getItem("token") !== null) {
-        //     setIsLogin(true);
-        //     setUserId(JSON.parse(localStorage.getItem("userInfo")).userId);
-        // }
-
         if (token !== null && token !== '') {
             setIsLogin(true);
         }
@@ -31,11 +26,6 @@ const NavList = () => {
 
     /* 로그아웃 */
     const logout = () => {
-        /* localStorage 초기화 */
-        // localStorage.removeItem("token");
-        // localStorage.removeItem("userInfo");
-        // setUserId('');
-
         /* redux store 초기화 */
         onSetToken('');
         onSetUserInfo({

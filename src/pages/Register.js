@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Container, Form, Row} from "react-bootstrap";
-import axios from "axios";
 import {shallowEqual, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
+import {regist} from "../apis/authApi";
 
 const Register = () => {
     const token = useSelector(state => state.token.token, shallowEqual);
@@ -18,7 +18,6 @@ const Register = () => {
 
     /* Register 페이지가 렌더링 될 때 로그인 상태 검사 */
     useEffect(() => {
-        // if (localStorage.getItem("token") !== null) {
         if (token !== null && token !== '') {
             alert("이미 로그인중입니다.");
             history.push("/");
@@ -72,22 +71,18 @@ const Register = () => {
     }
 
     /* 회원가입 API logic */
-    const registSubmit = (e) => {
-        e.preventDefault();
+    const registSubmit = async (event) => {
+        event.preventDefault();
 
         if (validateForm()) {
-            axios.post('http://localhost:8000/api/auth/signup', {
-                "userId": registId,
-                "userPassword": registPassword
-            }).then(res1 => {
+            let registResult = await regist(registId, registPassword);
+            if (registResult) {
                 /* 회원가입 성공 시 에러메세지, 폼 리셋 후 Home으로 이동 */
                 resetErrors();
                 resetForm();
                 alert('회원가입에 성공했습니다.\n로그인 페이지로 이동합니다.');
                 history.push("/login");
-            }, error => {
-                alert('회원가입에 실패했습니다.\n' + error);
-            });
+            }
         }
     };
 

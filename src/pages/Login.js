@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Container, Form, Row} from "react-bootstrap";
-import axios from "axios";
 import {setToken, setUserInfo} from '../reducers/token';
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
+import {login} from "../apis/authApi";
 
 const Login = () => {
     const token = useSelector(state => state.token.token, shallowEqual);
@@ -21,7 +21,6 @@ const Login = () => {
 
     /* Login 페이지가 렌더링 될 때 로그인 상태 검사 */
     useEffect(() => {
-        // if (localStorage.getItem("token") !== null) {
         if (token !== null && token !== '') {
             alert("이미 로그인중입니다.");
             history.push("/");
@@ -58,42 +57,17 @@ const Login = () => {
     };
 
     /* 로그인 API logic */
-    const loginSubmit = (event) => {
+    const loginSubmit = async (event) => {
         event.preventDefault();
 
         if (validateForm()) {
-            axios.post('http://localhost:8000/api/auth/signin', {
-                "userId": loginId,
-                "userPassword": loginPassword
-            }).then(res1 => {
-                const headers = {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + res1.data.token
-                };
-
-                axios.defaults.headers.post = null;
-                axios.get('http://localhost:8000/api/auth/user', {
-                    headers
-                }).then(res2 => {
-                    /* redux store 사용 */
-                    onSetToken(res1.data.token);
-                    onSetUserInfo(res2.data);
-
-                    /* localStorage 사용 */
-                    // localStorage.setItem("token", JSON.stringify(res1.data));
-                    // localStorage.setItem("userInfo", JSON.stringify(res2.data));
-
-                    /* 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동 */
-                    resetErrors();
-                    resetForm();
-                    alert(res2.data.userId + '님 환영합니다.');
-                    history.push('/');
-                }, error => {
-                    alert('회원 정보를 불러오는데 실패했습니다.\n' + error);
-                });
-            }, error => {
-                alert('아이디 또는 비밀번호가 잘못되었습니다.\n' + error);
-            });
+            let loginResult = await login(loginId, loginPassword, onSetToken, onSetUserInfo);
+            if (loginResult) {
+                resetErrors();
+                resetForm();
+                alert(loginId + '님 환영합니다.');
+                history.push('/');
+            }
         }
     };
 
