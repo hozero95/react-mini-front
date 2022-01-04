@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Container, Form, Row} from "react-bootstrap";
 import axios from "axios";
-import {setToken, setUserInfo} from '../modules/token';
+import {setToken, setUserInfo} from '../reducers/token';
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
 
-const Login = ({setIsLogin}) => {
+const Login = () => {
     const token = useSelector(state => state.token.token, shallowEqual);
 
     const dispatch = useDispatch();
@@ -19,27 +19,28 @@ const Login = ({setIsLogin}) => {
     const [idError, setIdError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
-    // Login 페이지가 렌더링 될 때 로그인 상태 검사
+    /* Login 페이지가 렌더링 될 때 로그인 상태 검사 */
     useEffect(() => {
-        if (localStorage.getItem("token") !== null) {
+        // if (localStorage.getItem("token") !== null) {
+        if (token !== null && token !== '') {
             alert("이미 로그인중입니다.");
             history.push("/");
         }
     }, [history]);
 
-    // 폼 리셋
+    /* 폼 리셋 */
     const resetForm = () => {
         setLoginId('');
         setLoginPassword('');
     }
 
-    // 에러 리셋
+    /* 에러 리셋 */
     const resetErrors = () => {
         setIdError('');
         setPasswordError('');
     };
 
-    // 로그인 유효성 검사
+    /* 로그인 유효성 검사 */
     const validateForm = () => {
         resetErrors();
         let validated = true;
@@ -56,9 +57,9 @@ const Login = ({setIsLogin}) => {
         return validated;
     };
 
-    // 로그인
+    /* 로그인 API logic */
     const loginSubmit = (event) => {
-        event.preventDefault(); // 테스트용
+        event.preventDefault();
 
         if (validateForm()) {
             axios.post('http://localhost:8000/api/auth/signin', {
@@ -74,21 +75,24 @@ const Login = ({setIsLogin}) => {
                 axios.get('http://localhost:8000/api/auth/user', {
                     headers
                 }).then(res2 => {
-                    // redux store 사용
+                    /* redux store 사용 */
                     onSetToken(res1.data.token);
                     onSetUserInfo(res2.data);
 
-                    // localStorage 사용
-                    localStorage.setItem("token", JSON.stringify(res1.data));
-                    localStorage.setItem("userInfo", JSON.stringify(res2.data));
+                    /* localStorage 사용 */
+                    // localStorage.setItem("token", JSON.stringify(res1.data));
+                    // localStorage.setItem("userInfo", JSON.stringify(res2.data));
 
-                    // 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동
-                    alert(JSON.parse(localStorage.getItem("userInfo")).userId + "님 환영합니다.");
+                    /* 로그인 성공 시 에러메세지, 폼 리셋 후 Home으로 이동 */
                     resetErrors();
                     resetForm();
-                    setIsLogin(true);
-                    history.push("/");
+                    alert(res2.data.userId + '님 환영합니다.');
+                    history.push('/');
+                }, error => {
+                    alert('회원 정보를 불러오는데 실패했습니다.\n' + error);
                 });
+            }, error => {
+                alert('아이디 또는 비밀번호가 잘못되었습니다.\n' + error);
             });
         }
     };
@@ -108,7 +112,7 @@ const Login = ({setIsLogin}) => {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" value={loginPassword}
+                                <Form.Control type="password" placeholder="Enter Password" value={loginPassword}
                                               onChange={e => setLoginPassword(e.target.value)}/>
                                 <div style={{color: 'red'}}>{passwordError}</div>
                             </Form.Group>

@@ -1,3 +1,5 @@
+/* 토큰과 유저 정보를 담고 있는 reducer */
+
 /* 액션 타입 정의 */
 const SET_TOKEN = 'token/SET_TOKEN';
 const SET_USERINFO = 'token/SET_USERINFO';

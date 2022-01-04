@@ -1,51 +1,73 @@
 import React, {useEffect, useState} from "react";
-import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
+import {Container, Nav, Navbar} from "react-bootstrap";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {setToken, setUserInfo} from "../reducers/token";
 import {useHistory} from "react-router-dom";
 
-const NavList = ({isLogin, setIsLogin}) => {
-    const [userId, setUserId] = useState('');
+const NavList = () => {
+    const token = useSelector(state => state.token.token, shallowEqual);
+    const userId = useSelector(state => state.token.userInfo.userId, shallowEqual);
 
-    useEffect(() => {
-        if (localStorage.getItem("token") !== null) {
-            setIsLogin(true);
-            setUserId(JSON.parse(localStorage.getItem("userInfo")).userId);
-        }
-    }, [setIsLogin, isLogin, userId]);
+    const dispatch = useDispatch();
+    const onSetToken = token => dispatch(setToken(token));
+    const onSetUserInfo = userInfo => dispatch(setUserInfo(userInfo));
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userInfo");
-        setIsLogin(false);
-        setUserId('');
-        alert("로그아웃 되었습니다.");
-    };
+    const [isLogin, setIsLogin] = useState(false);
+    // const [userId, setUserId] = useState('');
 
     const history = useHistory();
-    const onMoveHome = () => {
+
+    /* 토큰 상태가 변하면 로근 여부 상태를 갱신 */
+    useEffect(() => {
+        // if (localStorage.getItem("token") !== null) {
+        //     setIsLogin(true);
+        //     setUserId(JSON.parse(localStorage.getItem("userInfo")).userId);
+        // }
+
+        if (token !== null && token !== '') {
+            setIsLogin(true);
+        }
+    }, [token]);
+
+    /* 로그아웃 */
+    const logout = () => {
+        /* localStorage 초기화 */
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("userInfo");
+        // setUserId('');
+
+        /* redux store 초기화 */
+        onSetToken('');
+        onSetUserInfo({
+            userUnum: '',
+            userId: '',
+            authorities: []
+        });
+
+        setIsLogin(false);
+        alert("로그아웃 되었습니다.");
         history.push("/");
     };
-    const onMoveLogin = () => {
-        history.push("/login");
-    }
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="light">
             <Container>
-                <Navbar.Brand onClick={onMoveHome}>React-Mini-Project</Navbar.Brand>
+                <Navbar.Brand href="/" style={{cursor: "pointer"}}>React-Mini-Project</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link onClick={onMoveHome}>Home</Nav.Link>
-                        <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                            <NavDropdown.Item>Action</NavDropdown.Item>
-                            <NavDropdown.Divider/>
-                        </NavDropdown>
+                        <Nav.Link href="/">Home</Nav.Link>
+                        {/*<NavDropdown title="Dropdown" id="collasible-nav-dropdown">*/}
+                        {/*    <NavDropdown.Item>Action</NavDropdown.Item>*/}
+                        {/*    <NavDropdown.Divider/>*/}
+                        {/*</NavDropdown>*/}
                     </Nav>
                     <Nav>
                         <Navbar.Text hidden={!isLogin}>{userId}님 환영합니다.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</Navbar.Text>
+                        <Nav.Link href="/myPage" hidden={!isLogin}>MyPage</Nav.Link>
                         <Nav.Link onClick={logout} hidden={!isLogin}>Logout</Nav.Link>
-                        <Nav.Link onClick={onMoveLogin} hidden={isLogin}>Login</Nav.Link>
-                        <Nav.Link hidden={isLogin}>Register</Nav.Link>
+                        <Nav.Link href="/login" hidden={isLogin}>Login</Nav.Link>
+                        <Nav.Link href="/register" hidden={isLogin}>Register</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
