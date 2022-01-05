@@ -17,11 +17,7 @@ export const setUserInfo = userInfo => ({
 /* 초기 상태 선언 */
 const initialState = {
     token: '',
-    userInfo: {
-        userUnum: '',
-        userId: '',
-        authorities: []
-    }
+    userInfo: {}
 }
 
 /* 리듀서 선언 */

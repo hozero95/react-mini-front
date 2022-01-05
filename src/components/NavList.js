@@ -28,11 +28,7 @@ const NavList = () => {
     const logout = () => {
         /* redux store 초기화 */
         onSetToken('');
-        onSetUserInfo({
-            userUnum: '',
-            userId: '',
-            authorities: []
-        });
+        onSetUserInfo({});
 
         setIsLogin(false);
         alert("로그아웃 되었습니다.");

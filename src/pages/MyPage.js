@@ -30,10 +30,17 @@ const MyPage = () => {
 
     return (
         <Container fluid style={{padding: '0'}}>
-            token: {token}<br/>
-            userUnum: {userInfo.userUnum}<br/>
-            userId: {userInfo.userId}<br/>
-            authorities: {printAuthorities()}
+            토큰: {token}<br/>
+            유저번호: {userInfo.userUnum}<br/>
+            아이디: {userInfo.userId}<br/>
+            우편번호: {userInfo.postcode}<br/>
+            주소: {userInfo.address}<br/>
+            상세주소: {userInfo.detailAddress}<br/>
+            참고주소: {userInfo.extraAddress}<br/>
+            이메일: {userInfo.email}<br/>
+            연락처: {userInfo.tel}<br/>
+            유저생성일: {new Date(userInfo.regdate).toString()}<br/>
+            유저권한: {printAuthorities()}
         </Container>
     );
 };

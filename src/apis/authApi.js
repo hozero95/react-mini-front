@@ -18,6 +18,7 @@ export const login = async (loginId, loginPassword, onSetToken, onSetUserInfo) =
         await axios.get('http://localhost:8000/api/auth/user', {
             headers
         }).then(res2 => {
+            console.log(res2.data);
             onSetUserInfo(res2.data);
 
             result = true;
@@ -32,12 +33,18 @@ export const login = async (loginId, loginPassword, onSetToken, onSetUserInfo) =
 };
 
 /* 회원가입 API */
-export const regist = async (registId, registPassword) => {
+export const regist = async (registId, registPassword, postcode, address, detailAddress, extraAddress, email, tel) => {
     let result = false;
 
     await axios.post('http://localhost:8000/api/auth/signup', {
         "userId": registId,
-        "userPassword": registPassword
+        "userPassword": registPassword,
+        "postcode": postcode,
+        "address": address,
+        "detailAddress": detailAddress,
+        "extraAddress": extraAddress,
+        "email": email,
+        "tel": tel
     }).then(res => {
         result = true;
     }, error => {
