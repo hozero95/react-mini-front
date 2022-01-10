@@ -18,7 +18,6 @@ export const login = async (loginId, loginPassword, onSetToken, onSetUserInfo) =
         await axios.get('http://localhost:8000/api/auth/user', {
             headers
         }).then(res2 => {
-            console.log(res2.data);
             onSetUserInfo(res2.data);
 
             result = true;

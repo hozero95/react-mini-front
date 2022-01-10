@@ -72,7 +72,7 @@ const Login = () => {
     };
 
     return (
-        <Container fluid style={{padding: '0'}}>
+        <Container fluid="lg" style={{padding: '0'}}>
             <Row className="justify-content-md-center" lg="4">
                 <Card style={{margin: '100px', padding: '0'}}>
                     <Card.Header>Login</Card.Header>

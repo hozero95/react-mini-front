@@ -3,6 +3,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
 import Register from "./pages/Register";
+import ProductList from "./pages/ProductList";
+import Board from "./pages/Board";
+import UserList from "./pages/UserList";
 
 const routes = () => {
     return (
@@ -22,6 +25,18 @@ const routes = () => {
             {
                 path: '/myPage',
                 component: MyPage
+            },
+            {
+                path: '/productList',
+                component: ProductList
+            },
+            {
+                path: '/userList',
+                component: UserList
+            },
+            {
+                path: '/board',
+                component: Board
             }
         ]
     );

@@ -29,7 +29,7 @@ const MyPage = () => {
     }
 
     return (
-        <Container fluid style={{padding: '0'}}>
+        <Container fluid="lg" style={{padding: '0', border: "solid 1px black"}}>
             토큰: {token}<br/>
             유저번호: {userInfo.userUnum}<br/>
             아이디: {userInfo.userId}<br/>

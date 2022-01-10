@@ -6,23 +6,30 @@ import {useHistory} from "react-router-dom";
 
 const NavList = () => {
     const token = useSelector(state => state.token.token, shallowEqual);
-    const userId = useSelector(state => state.token.userInfo.userId, shallowEqual);
+    const userInfo = useSelector(state => state.token.userInfo, shallowEqual);
 
     const dispatch = useDispatch();
     const onSetToken = token => dispatch(setToken(token));
     const onSetUserInfo = userInfo => dispatch(setUserInfo(userInfo));
 
     const [isLogin, setIsLogin] = useState(false);
-    // const [userId, setUserId] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const history = useHistory();
 
-    /* 토큰 상태가 변하면 로근 여부 상태를 갱신 */
+    /* 토큰, 유저 정보 상태가 변하면 토근 여부 상태를 갱신 */
     useEffect(() => {
         if (token !== null && token !== '') {
             setIsLogin(true);
         }
-    }, [token]);
+
+        const authorities = userInfo.authorities;
+        if (typeof authorities !== 'undefined') {
+            if (authorities.length > 1) {
+                setIsAdmin(true);
+            }
+        }
+    }, [token, userInfo]);
 
     /* 로그아웃 */
     const logout = () => {
@@ -31,8 +38,9 @@ const NavList = () => {
         onSetUserInfo({});
 
         setIsLogin(false);
-        alert("로그아웃 되었습니다.");
-        history.push("/");
+        setIsAdmin(false);
+        alert('로그아웃 되었습니다.');
+        history.push('/');
     };
 
     return (
@@ -43,13 +51,17 @@ const NavList = () => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="/">Home</Nav.Link>
+                        <Nav.Link href="/productList">ProductList</Nav.Link>
+                        <Nav.Link href="/board">Board</Nav.Link>
+                        <Nav.Link href="/userList" hidden={!isAdmin}>UserList</Nav.Link>
                         {/*<NavDropdown title="Dropdown" id="collasible-nav-dropdown">*/}
                         {/*    <NavDropdown.Item>Action</NavDropdown.Item>*/}
                         {/*    <NavDropdown.Divider/>*/}
                         {/*</NavDropdown>*/}
                     </Nav>
                     <Nav>
-                        <Navbar.Text hidden={!isLogin}>{userId}님 환영합니다.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</Navbar.Text>
+                        <Navbar.Text hidden={!isLogin}>{userInfo.userId}님
+                            환영합니다.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;</Navbar.Text>
                         <Nav.Link href="/myPage" hidden={!isLogin}>MyPage</Nav.Link>
                         <Nav.Link onClick={logout} hidden={!isLogin}>Logout</Nav.Link>
                         <Nav.Link href="/login" hidden={isLogin}>Login</Nav.Link>
