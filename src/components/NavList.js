@@ -51,8 +51,8 @@ const NavList = () => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="/">Home</Nav.Link>
-                        <Nav.Link href="/productList">ProductList</Nav.Link>
-                        <Nav.Link href="/board">Board</Nav.Link>
+                        {/*<Nav.Link href="/productList">ProductList</Nav.Link>*/}
+                        <Nav.Link href="/notice">Notice</Nav.Link>
                         <Nav.Link href="/userList" hidden={!isAdmin}>UserList</Nav.Link>
                         {/*<NavDropdown title="Dropdown" id="collasible-nav-dropdown">*/}
                         {/*    <NavDropdown.Item>Action</NavDropdown.Item>*/}

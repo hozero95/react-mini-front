@@ -18,13 +18,3 @@ export const setPaging = (gridView) => {
         document.getElementById("total-page-view").innerHTML = totalPage;
     };
 }
-
-export const setprevPage = (gridView) => {
-    let currentPage = gridView.getPage();
-    gridView.setPage(currentPage - 1);
-};
-
-export const setNextPage = (gridView) => {
-    let currentPage = gridView.getPage();
-    gridView.setPage(currentPage + 1);
-}

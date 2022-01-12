@@ -147,7 +147,7 @@ export const usersColumns = [
             textAlignment: "center"
         },
         header: {
-            text: "최종수정일"
+            text: "생성일"
         },
         editor: {
             type: "btdate",

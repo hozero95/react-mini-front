@@ -3,6 +3,8 @@ import {getProductsAll} from "../apis/productsApi";
 import {usersColumns, usersField, usersRows} from "./data/usersData";
 import {deleteUsers, getUsersAll, updateUsers} from "../apis/usersApi";
 import {setPaging} from "./paging";
+import {noticesColumns, noticesField, noticesRows} from "./data/noticesData";
+import {getNoticesAll} from "../apis/noticesApi";
 
 /*
     Sorting
@@ -79,6 +81,7 @@ export const setProductsGrid = async (provider, gridView) => {
     });
 };
 
+
 /* UserList Grid */
 export const setUsersGrid = async (provider, gridView, token) => {
     // Setting
@@ -91,7 +94,7 @@ export const setUsersGrid = async (provider, gridView, token) => {
         provider.setRows(usersData);
     }
 
-    setPaging(provider, gridView);
+    setPaging(gridView);
 
     // Sorting
     gridView.orderBy(
@@ -140,7 +143,6 @@ export const setUsersGrid = async (provider, gridView, token) => {
     gridView.onContextMenuItemClicked = await function (grid, item, clickData) {
         switch (item.label) {
             case "delete":
-                console.log(gridView.getCurrent().dataRow);
                 deleteUsers(token, provider.getValue(clickData.dataRow, 'userUnum'));
                 provider.removeRow(gridView.getCurrent().dataRow);
                 break;
@@ -216,5 +218,60 @@ export const setUsersGrid = async (provider, gridView, token) => {
             default:
                 break;
         }
+    }
+};
+
+/* UserList Grid */
+export const setNoticesGrid = async (provider, gridView, token, history) => {
+    // Setting
+    provider.setFields(noticesField);
+    gridView.setColumns(noticesColumns);
+    let noticesData = await getNoticesAll(token);
+    if (noticesData.length <= 0) {
+        provider.setRows(noticesRows);
+    } else {
+        provider.setRows(noticesData);
+    }
+    setPaging(gridView);
+
+    // Sorting
+    gridView.orderBy(
+        ['noticeUnum'],
+        ['descending'],
+        ['insensitive']
+    );
+
+    // 푸터 설정
+    gridView.setFooters({
+        visible: false
+    });
+
+    // 컬럼 편집 설정
+    gridView.columnByName('noticeUnum').editable = false;
+    gridView.columnByName('title').editable = false;
+    gridView.columnByName('regdate').editable = false;
+    gridView.setEditOptions({
+        deletable: false
+    });
+
+    // 상태바 설정
+    gridView.setStateBar({
+        visible: false
+    });
+
+    // 체크바 설정
+    gridView.setCheckBar({
+        visible: false
+    });
+
+    // 더블클릭 이벤트
+    gridView.onCellDblClicked = function (grid, clickData) {
+        // getNotices(provider.getValue(clickData.dataRow, 'noticeUnum')).then((notice) => {
+        //     console.log(notice.noticeUnum);
+        //     history.push('/');
+        // });
+
+        let param = provider.getValue(clickData.dataRow, 'noticeUnum');
+        history.push('/noticeDetail/' + param);
     }
 };

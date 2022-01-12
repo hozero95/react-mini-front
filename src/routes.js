@@ -4,8 +4,9 @@ import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
 import Register from "./pages/Register";
 import ProductList from "./pages/ProductList";
-import Board from "./pages/Board";
+import Notice from "./pages/Notice";
 import UserList from "./pages/UserList";
+import NoticeDetail from "./pages/NoticeDetail";
 
 const routes = () => {
     return (
@@ -35,8 +36,12 @@ const routes = () => {
                 component: UserList
             },
             {
-                path: '/board',
-                component: Board
+                path: '/notice',
+                component: Notice
+            },
+            {
+                path: '/noticeDetail/:noticeUnum',
+                component: NoticeDetail
             }
         ]
     );

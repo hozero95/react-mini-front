@@ -37,7 +37,7 @@ export const updateUsers = async (token, updateData) => {
         alert('update ' + res.data);
     }).catch(err => {
         alert('접근 권한이 없습니다.');
-    })
+    });
 };
 
 export const deleteUsers = async (token, userUnum) => {
@@ -56,5 +56,5 @@ export const deleteUsers = async (token, userUnum) => {
         alert('delete ' + res.data);
     }).catch(err => {
         alert('접근 권한이 없습니다.');
-    })
+    });
 };
